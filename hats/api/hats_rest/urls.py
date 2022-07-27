@@ -4,7 +4,7 @@ from .views import api_list_hats
 urlpatterns = [
     # path("attendees/", api_list_attendees, name="api_create_attendees"),
     path(
-        "locations/<int:location_vo_id>/hats/",
+        "hats/",
         api_list_hats,
         name="api_list_hats",
     ),
