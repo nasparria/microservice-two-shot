@@ -2,17 +2,16 @@
 
 Team:
 
-* Person 1 - Which microservice?
-* Person 2 - Which microservice?
+* Person 1 - Which microservice? Victoria Ziegler is doing hats
+* Person 2 - Which microservice? Nicolas Asparria is doing Shoes
 
 ## Design
 
 ## Shoes microservice
 
-Explain your models and integration with the wardrobe
-microservice, here.
+The Shoes resource will be a microservice track its manufacturer (CharField), its name(CharField), its color(CharField), a URL for a picture(URLField), and the Bin(Foreing Key to the model location) in the wardrobe where it exists.
+
 
 ## Hats microservice
 
-There will be two models to create for Hats in its microservice and LocationVO
-The Hats model will have the properties fabric (CharField), style name (CharField), color (CharField), picture_url (URLField), and location (ForeignKey to LocationVO model)
+The Hat resource will be a microservice track its fabric (CharField), its style_name(CharField), its color(CharField), a URL for a picture(URLField), and the location(Foreing Key to the model location) in the wardrobe where it exists.
