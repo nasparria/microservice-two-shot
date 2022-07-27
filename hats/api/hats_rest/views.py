@@ -14,12 +14,18 @@ class HatListEncoder(ModelEncoder):
 #     model = LocationVO
 #     properties = ["name", "import_href"]
 
-
 @require_http_methods(["GET", "POST"])
-def api_list_hats(request, location_vo_id=None):
+def api_list_hats(request):
     if request.method == "GET":
-        hats = Hat.objects.filter(location=location_vo_id)
-        return JsonResponse(hats, encoder=HatListEncoder, safe=False)
+        hats = Hat.objects.all()
+        return JsonResponse({"hats": hats}, encoder=HatListEncoder,)
+
+
+# @require_http_methods(["GET", "POST"])
+# def api_list_hats(request, location_vo_id=None):
+#     if request.method == "GET":
+#         hats = Hat.objects.filter(location=location_vo_id)
+#         return JsonResponse(hats, encoder=HatListEncoder, safe=False)
     # else:
     #     content = json.loads(request.body)
     #     try:
