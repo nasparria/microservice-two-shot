@@ -16,13 +16,6 @@ from django.urls import reverse
 
 #     class Meta:
 #         ordering = ("closet_name", "bin_number", "bin_size")
-class BinVO(models.Model):
-    # import_href = models.CharField(max_length=200, unique=True)
-    closet_name= models.TextField()
-    bin_number = models.PositiveSmallIntegerField()
-    bin_size = models.PositiveSmallIntegerField()
-    
-
 
 class Shoe(models.Model):
     """
@@ -36,13 +29,27 @@ class Shoe(models.Model):
     name = models.CharField(max_length=200)
     color = models.CharField(max_length=200)
     picture_url = models.URLField(null=True, blank=True)
-    bin = models.ForeignKey(BinVO, related_name="shoes",on_delete=models.CASCADE, null=True, blank=True)
+    bin = models.ForeignKey("BinVO", related_name="shoes",on_delete=models.CASCADE, null=True, blank=True)
+
 
     def __str__(self):
-        return f"{self.manufacturer} - {self.name}/{self.color}"
+        return self.name
+
+
+class BinVO(models.Model):
+    # import_href = models.CharField(max_length=200, unique=True)
+    closet_name= models.TextField()
+    bin_number = models.PositiveSmallIntegerField()
+    bin_size = models.PositiveSmallIntegerField()
 
     def get_api_url(self):
-        return reverse("api_show_shoe", kwargs={"pk": self.pk})
+        return reverse("api_details_shoe", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return self.closet_name
+
+
+
 
 
 
