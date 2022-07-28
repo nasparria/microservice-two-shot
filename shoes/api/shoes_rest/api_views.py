@@ -1,21 +1,38 @@
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
-
-from .models import Shoe
+import json
 
 from common.json import ModelEncoder
 
-from django.views.decorators.http import require_http_methods
-
-import json
+from .models import Shoe, BinVO
 
 
+class ShoesListEncoder(ModelEncoder):
+    model = Shoe
+    properties = [
+        "name",
+        "manufacturer",
+        "color",
+        "picture_url",
+        "bin",
+        "id",
+    ]
+
+class BinVOEncoder(ModelEncoder):
+    model = BinVO
+    properties = [
+        "bin_number",
+        "bin_size",
+        "id",
+        "closet_name",
+    ]
 
 @require_http_methods(["GET", "POST"])
 def api_list_shoes(request):
     if request.method == "GET":
         shoes = Shoe.objects.all()
-        return JsonResponse({"shoes": shoes}, encoder=ShoesListEncoder)
+        return JsonResponse({"shoes": shoes}, encoder=ShoesListEncoder, safe=False)
     else:
         contenido = json.loads(request.body)
         shoe = Shoe.objects.create(**contenido)
@@ -25,8 +42,13 @@ def api_list_shoes(request):
             safe=False,
         )
     
-
-
+@require_http_methods(["GET"])
+def api_list_bins(request):
+    bin = BinVO.objects.all()
+    return JsonResponse(
+        {"bins": bin},
+        encoder=BinVOEncoder
+    )
 
 
     # if request.method == "GET":
@@ -56,14 +78,8 @@ def api_list_shoes(request):
     #         safe=False,
     #     )
 
-
-class ShoesListEncoder(ModelEncoder):
-    model = Shoe
-    properties = [
-        "name",
-        "manufacturer",
-        "color",
-        "picture_url",
-        "binn",
-
-    ]
+@require_http_methods(["DELETE"])
+def api_details_shoe(request, pk):
+    if request.method == "DELETE":
+        cuenta, _ = Shoe.objects.filter(id=pk).delete()
+        return JsonResponse({"Errased": cuenta > 0})
