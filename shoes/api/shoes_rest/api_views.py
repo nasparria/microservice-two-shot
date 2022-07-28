@@ -1,48 +1,63 @@
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
-
-from .models import Shoe
+import json
 
 from common.json import ModelEncoder
 
-from django.views.decorators.http import require_http_methods
-
-import json
-
-# from events.models import Conference
+from .models import Shoe, BinVO
 
 
-# class ConferenceVODetailEncoder(ModelEncoder):
-#     model = ConferenceVO
-#     properties = ["name", "import_href"]
+class ShoesListEncoder(ModelEncoder):
+    model = Shoe
+    properties = [
+        "name",
+        "manufacturer",
+        "color",
+        "picture_url",
+        "bin",
+        "id",
+    ]
 
-
-# class AttendeeListEncoder(ModelEncoder):
-#     model = Attendee
-#     properties = [
-#         "name",
-#     ]
-
-
+class BinVOEncoder(ModelEncoder):
+    model = BinVO
+    properties = [
+        "bin_number",
+        "bin_size",
+        "id",
+        "closet_name",
+    ]
 
 @require_http_methods(["GET", "POST"])
-def api_list_shoes(request, bin_vo_encoder=None):
-    """
-    Lists the attendees names and the link to the attendee
-    for the specified conference id.
-
-    Returns a dictionary with a single key "attendees" which
-    is a list of attendee names and URLS. Each entry in the list
-    is a dictionary that contains the name of the attendee and
-    the link to the attendee's information.
-    """
+def api_list_shoes(request):
     if request.method == "GET":
-        shoes = Shoe.objects.filter(bin=bin_vo_encoder)
+        shoes = Shoe.objects.all()
+        return JsonResponse({"shoes": shoes}, encoder=ShoesListEncoder, safe=False)
+    else:
+        contenido = json.loads(request.body)
+        shoe = Shoe.objects.create(**contenido)
         return JsonResponse(
-            {"shoes": shoes},
+            shoe,
             encoder=ShoesListEncoder,
-            safe=False
+            safe=False,
         )
+    
+@require_http_methods(["GET"])
+def api_list_bins(request):
+    bin = BinVO.objects.all()
+    return JsonResponse(
+        {"bins": bin},
+        encoder=BinVOEncoder
+    )
+
+
+    # if request.method == "GET":
+    #     shoes = Shoe.objects.filter(bin=bin_vo_encoder)
+    #     return JsonResponse(
+    #         {"shoes": shoes},
+    #         encoder=ShoesListEncoder,
+    #         safe=False
+    #     )
     # else:
     #     content = json.loads(request.body)
 
@@ -63,9 +78,8 @@ def api_list_shoes(request, bin_vo_encoder=None):
     #         safe=False,
     #     )
 
-
-class ShoesListEncoder(ModelEncoder):
-    model = Shoe
-    properties = [
-        "name",
-    ]
+@require_http_methods(["DELETE"])
+def api_details_shoe(request, pk):
+    if request.method == "DELETE":
+        cuenta, _ = Shoe.objects.filter(id=pk).delete()
+        return JsonResponse({"Errased": cuenta > 0})
