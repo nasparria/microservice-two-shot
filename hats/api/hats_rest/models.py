@@ -1,9 +1,12 @@
 from django.db import models
+from django.urls import reverse
 
 
 class LocationVO(models.Model):
-    import_href = models.CharField(max_length=200, unique=True)
-    name = models.CharField(max_length=200)
+    import_href = models.CharField(max_length=200, unique=True, null=True)
+    closet_name = models.CharField(max_length=100, null=True)
+    section_number = models.PositiveSmallIntegerField(null=True)
+    shelf_number = models.PositiveSmallIntegerField(null=True)
 
 
 class Hat(models.Model):
@@ -18,3 +21,9 @@ class Hat(models.Model):
         null=True,
         blank=True,
     )
+
+    # def __str__(self):
+    #     return self.style_name
+
+    # def get_api_url(self):
+    #     return reverse("api_show_hats", kwargs={"pk": self.pk})
