@@ -10,12 +10,11 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shoes_project.settings")
 django.setup()
 
 # Import models from hats_rest, here.
-# from api.shoes_rest import models
 # from shoes_rest.models import Something
 from shoes_rest.models import BinVO
 
-def getting_bins():
-    url = requests.get("http://wardrobe-api:8000/api/bins/")
+def get_bins():
+    url = "http://wardrobe-api:8000/api/bins/"
     response = requests.get(url)
     content = json.loads(response.content)
     for bin in content["bins"]:
@@ -30,13 +29,13 @@ def poll():
     while True:
         print('Shoes poller polling for data')
         try:
-            # Write your polling logic, here
-            getting_bins()
-            pass
+            get_bins()
         except Exception as e:
             print(e, file=sys.stderr)
-        time.sleep(10)
+        time.sleep(60)
 
 
 if __name__ == "__main__":
     poll()
+
+

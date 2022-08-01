@@ -1,14 +1,9 @@
 from django.urls import path
 
-from .api_views import api_list_shoes, api_list_bins, api_details_shoe
+from .api_views import list_bin_vos, list_shoes, show_shoe
 
 urlpatterns = [
-    path(
-        "shoes/", api_list_shoes, name="api_list_shoes"),
-    path(
-        "shoes/<int:pk>/", api_details_shoe, name="api_list_shoes"),
-    # path("bins/", api_list_bins, name="api_list_bins"),
-        # bin<int:bin_vo_encoder>/shoes_rest/",
-        # api_list_shoes,
-        # name="api_list_shoes",
-    ]
+    path("bins/", list_bin_vos, name="list_bins"),
+    path("shoes/", list_shoes, name="list_shoes"),
+    path("shoes/<int:pk>/", show_shoe, name="list_shoes"),
+]
